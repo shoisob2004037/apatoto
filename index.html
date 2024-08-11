@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products Listing</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Amita:wght@400;700&family=Charm:wght@400;700&family=Josefin+Sans:ital,wght@0,100..700;1,100..700&family=Kalnia+Glaze:wght@100..700&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Mooli&family=PT+Sans+Narrow:wght@400;700&family=Roboto+Slab:wght@100..900&family=Sansita:ital,wght@0,400;0,700;0,800;0,900;1,400;1,700;1,800;1,900&family=Teko:wght@300..700&family=Titillium+Web:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: "Mooli", sans-serif;
+        }
+        h1 {
+            text-align: center;
+            margin: 20px;
+        }
+        #buttons {
+            margin-bottom: 20px;
+        }
+        #buttons button{
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin: 5px;
+            border-radius: 10px;
+        }
+        #buttons button:nth-child(6) {
+            background: linear-gradient(45deg, #ff6f00, #ffca28);
+}
+        #list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            padding: 10px;
+            width: 75%;
+        }
+        #list button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-top: 10px;
+            border-radius: 10px;
+        }
+        #list div {
+            width: 30%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            box-shadow: 0 2px 5px rgba(1,0.4,0,0.9);
+            border-radius: 15px;
+        }
+        #list div:hover {
+            border: 3px solid cornflowerblue;   
+        }
+        
+        #list img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin-bottom: 10px;
+        }
+        @media screen and (max-width: 768px) {
+            #list div {
+                width: 35%; 
+            }
+        }
+        @media screen and (max-width: 480px) {
+            #list div {
+                width: 75%; 
+            }
+        }
+        .content {
+            display: flex;
+        }
+        #cart {
+            position: sticky;
+            top: 0;
+            padding: 10px;
+            border-left: 1px solid #ccc;
+            height: 100vh;
+            overflow-y: auto;
+            background-color: rgb(183, 221, 146);
+            display: none;
+            border-radius: 20px;
+        }
+        #cart-items table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        #cart-items th, #cart-items td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        #cart-items th {
+            background-color: cornflowerblue;
+        }
+        #cart-items tr {
+            background-color: darkgreen;
+            color: white;
+            border-radius: 10px;
+        }
+        #cart-items td button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+            padding: 5px 10px;
+        }
+        #total-price {
+            text-align: right;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        #cart-button {
+            border-radius: 30%;
+            background-color: green;
+            position: relative;
+            padding: 10px;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+        #cart-button span {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            background-color: red;
+            color: white;
+            border-radius: 50%;
+            padding: 5px;
+            font-size: 12px;
+        }
+        #description{
+            background-color: darkcyan;
+            color: white;
+            padding: 10px;
+            margin-left: 20px;
+            border-radius: 10px;
+            width: 25%;
+        }
+    </style>
+</head>
+<body>
+    <h1>Shopping Website</h1>
+    <div id="buttons">
+        <button onclick="filterCategory('all')">All</button>
+        <button onclick="filterCategory('men\'s clothing')">Men's Clothing</button>
+        <button onclick="filterCategory('women\'s clothing')">Women's Clothing</button>
+        <button onclick="filterCategory('electronics')">Electronics</button>
+        <button onclick="filterCategory('jewelery')">Jewelery</button>
+        <button id="cart-button" onclick="openCart()">
+            <i class="fa-solid fa-cart-shopping"></i>
+            <span id="cart-count">0</span>
+        </button>
+    </div>
+
+    <div class="content">
+        <div id="list"></div>
+        <div id="cart">
+            <h1>Cart List</h1>
+            <div id="cart-items">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Product Image</th>
+                            <th>Title</th>
+                            <th>Price</th>
+                            <th>Qty</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cart-body"></tbody>
+                </table>
+                <div id="total-price">Total: $0.00</div>
+            </div>
+        </div>
+        <div id="description">
+            <h2>Item Details</h2>
+        </div>
+    </div>
+
+    <script>
+        let products = [];
+        const cart = JSON.parse(localStorage.getItem('cart')) || {};
+        let cartScore = Object.keys(cart).length;
+
+        document.getElementById('cart-count').innerText = cartScore;
+
+        function addToCart(title, price, image) {
+            const cartCount = document.getElementById('cart-count');
+            if (cart[title]) {
+                alert("Item already in cart!");
+                return;
+            }
+
+            cart[title] = {
+                price: parseFloat(price),
+                quantity: 1,
+                image: image  
+            };
+            cartScore++;
+            cartCount.innerText = cartScore;
+
+            saveCart();
+            updateCart();
+        }
+
+        function saveCart() {
+            localStorage.setItem('cart', JSON.stringify(cart));
+            document.getElementById('cart-count').innerText = cartScore;
+        }
+
+        function updateCart() {
+            const cartBody = document.getElementById('cart-body');
+            cartBody.innerHTML = '';
+
+            let totalPrice = 0;
+
+            for (const title in cart) {
+                const item = cart[title];
+                const row = document.createElement('tr');
+
+                row.innerHTML = `
+                    <td><img src="${item.image}" alt="${title}" width="50"></td>
+                    <td>${title}</td>
+                    <td>$${item.price.toFixed(2)}</td>
+                    <td>
+                        <button onclick="decreaseQuantity('${title}')">-</button>
+                        ${item.quantity}
+                        <button onclick="increaseQuantity('${title}')">+</button>
+                    </td>
+                    <td>$${(item.price * item.quantity).toFixed(2)}</td>
+                `;
+
+                cartBody.appendChild(row);
+                totalPrice += item.price * item.quantity;
+            }
+
+            document.getElementById('total-price').innerText = `Total: $${totalPrice.toFixed(2)}`;
+        }
+
+        function decreaseQuantity(title) {
+            if (cart[title].quantity > 1) {
+                cart[title].quantity--;
+                saveCart();
+                updateCart();
+            } else {
+                removeItem(title);
+            }
+        }
+
+        function increaseQuantity(title) {
+            cart[title].quantity++;
+            saveCart();
+            updateCart();
+        }
+
+        function removeItem(title) {
+            delete cart[title];
+            cartScore--;
+            saveCart();
+            updateCart();
+        }
+
+        function openCart() {
+            const cartElement = document.getElementById('cart');
+            const list = document.getElementById('list');
+            const details = document.getElementById('description');
+
+            if (cartElement.style.display === 'block') {
+                cartElement.style.display = 'none';
+                list.style.display = 'flex';
+                list.style.width = '100%';
+                details.style.display = 'flex';
+            } else {
+                cartElement.style.display = 'block';
+                list.style.display = 'none';
+                cartElement.style.width = '100%';
+                details.style.display = 'none';
+            }
+        }
+
+        async function fetchData() {
+            try {
+                const response = await fetch('https://fakestoreapi.com/products');
+                const data = await response.json();
+                products = data;
+                displayProducts(products);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        }
+
+        function displayProducts(products) {
+            const list = document.getElementById('list');
+            list.innerHTML = '';
+            products.forEach(item => {
+                const div = document.createElement('div');
+                div.innerHTML = `
+                    <img src="${item.image}" alt="${item.title}">
+                    <h2>${item.title}</h2>
+                    <p>Price: $${item.price}</p>
+                    <p>Rating: ${item.rating.rate}</p>
+                    <button onclick="addToCart('${item.title.replace(/'/g, "\\'")}', '${item.price}', '${item.image}')">Add to Cart</button>
+                    <button onclick="openDescription('${item.title.replace(/'/g, "\\'")}', '${item.description.replace(/'/g, "\\'")}', '${item.image}', '${item.rating.rate}')">More Details</button>
+                `;
+                list.appendChild(div);
+            });
+        }
+
+        function filterCategory(category) {
+            const filteredProducts = category === 'all' ? products : products.filter(item => item.category === category);
+            displayProducts(filteredProducts);
+        }
+
+        function openDescription(title, description, image, rate) {
+            const details = document.getElementById('description');
+            details.innerHTML = `
+                <h2>Item Details</h2>
+                <p><strong>Title:</strong> ${title}</p>
+                <img src="${image}" alt="${title}" style="width:80%;height:auto;border-radius:15px;margin-top:10px;">
+                <p>${description}</p>
+                <p style="margin-top:20px;"><strong>Rating:</strong> ${rate}/5 </p>
+            `;
+        }
+
+        fetchData();
+        updateCart();
+    </script>
+</body>
+</html>
